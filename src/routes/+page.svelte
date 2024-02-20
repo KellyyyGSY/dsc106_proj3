@@ -1,5 +1,5 @@
 <script>
-    import App from '../components/App.svelte';
-  </script>
-  
-  <App />
+  import App from '../components/App.svelte';
+</script>
+
+<App />
