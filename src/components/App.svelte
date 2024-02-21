@@ -395,11 +395,11 @@
     const legendTitle = legend.append('text')
       .attr('class', 'legend-title')
       .attr('x', -10)
-      .attr('y', 515)
+      .attr('y', 505)
       .text('Percentage of individuals using the internet');
 
     const legendX = -9;
-    const legendY = 345;
+    const legendY = 335;
     const legendItem = legend.selectAll('.legend-item')
       .data(legendData)
       .enter()
@@ -456,6 +456,58 @@
     </svg>
     <div class="tooltip" style="{tooltipStyle}">{tooltipContent}</div>
     <svg id="linePlotSvg"></svg>
+  </div>
+  <div class="graph-text">
+    <p> <b>Map Visualization</b><br>We use the <b>Internet Usage Data</b> as our dataset to achieve our visualization. 
+    Given the nature of the data (internet usage across countries/regions over time), 
+    a <b>choropleth map</b> was chosen as the primary visualization technique. 
+    Choropleth maps are effective for displaying variations in data across geographical regions. 
+    A <b>sequential color scale</b> from yellow, green to blue was selected to better emphasize the degree of internet usage, 
+    with lighter shades indicating lower internet usage and darker shades indicating higher usage. 
+    This choice ensures clear differentiation between countries with varying levels of internet penetration. 
+    The legend accompanying the map provides a visual reference for interpreting the colors, 
+    enhancing the user's understanding of the data. Upon clicking a country on the map, a line plot appears, 
+    showing the internet usage trend over the years for the selected country. 
+    Line plots are suitable for displaying time-series data, making it easy to observe trends and fluctuations over time. 
+    By showing the trend for a specific country upon user interaction, 
+    it provides detailed insights into individual country-level data. <br><br>
+    
+    <b>Interactive Elements</b><br>Regarding the interactive features of our visualization, we've integrated a slider right beneath the title, 
+    providing users with the flexibility to select the year they want to explore. 
+    This interactive tool empowers users to track the progression of internet usage over time, 
+    thereby facilitating temporal analysis. When users hover over different regions on the map, tooltips pop up, 
+    furnishing detailed insights into each country's internet usage for the chosen year. Moreover, 
+    we've implemented click event functionality and blur effects, accompanied by line plots for specific regions, 
+    to effectively illustrate data trends. Additionally, clicking on the blank area resets the map. Furthermore, 
+    the inclusion of a search bar allows users to effortlessly locate countries by name, 
+    streamlining access to specific countries of interest. The ranking list situated on the website's side 
+    permits users to switch between ascending and descending orders for global year ranks. 
+    This interactive feature furnishes additional perspectives on the distribution of internet usage across countries.<br><br>
+
+    <b>Changes and Issues</b><br>Throughout the development process, the choice of geographic projections underwent some changes. 
+    Initially, we favored the geoMercator projection but ultimately transitioned to geoNaturalEarth1 
+    due to its reduction in area distortion. The current version of the website isn't flawless, though. 
+    It's important to note that in the original dataset, there's data for both countries and regions, 
+    which is reflected in the ranking list. Clicking on a country's name in the ranking list directs us to its location on the map. 
+    However, for regions like North America, this functionality doesn't work. Additionally, 
+    when we click on a country's name in the ranking list, only the zoom effect happens, 
+    and we have to click on the region again to trigger the plot and blur effect. Lastly, 
+    after selecting a specific country, the blur effect doesn't persist when we slide the slider.<br><br>
+
+    <b>Team roles</b><br>Team responsibilities were not explicitly divided. We selected the dataset that Andrew preprocessed in his project 2 to save some time. 
+    Yishan and Kelly took charge of importing datasets and establishing the foundational map and projection, 
+    along with their respective attributes. Kelly incorporated interactive elements like sliders and hover effects, 
+    while Yishan created a color legend for reference and contributed to most of the write-up content. 
+    Andrew played a crucial role in enhancing interactivity by focusing on details such as click event functionality and blur effects, 
+    incorporating specific line plots for each region. Additionally, he introduced a search bar to streamline access to countries of interest. <br><br>
+
+    <b>Challenges</b><br>Each team member dedicated around <b>20 hours</b> to this project. 
+    At the start, we didn't realize there was a template available, so we had to spend a significant amount 
+    of time setting up the entire environment from scratch. This oversight also led to some unnecessary 
+    delays in deploying the website. Additionally, to prevent conflicts, we took turns working on the project. 
+    However, we encountered issues with setting too many variables as local within each function instead of 
+    making them global, which caused errors and required additional time for debugging. <br><br>
+    </p>
   </div>
 </main>
 
@@ -572,6 +624,17 @@
 
 .suggestions-list li:hover {
   background-color: #f0f0f0;
+}
+
+.graph-text {
+  position: absolute; /* Position the element absolutely */
+  bottom: -1400px; /* Adjust the distance from the bottom */
+  width: 85%;
+  left: 52%; /* Position it horizontally at the center */
+  transform: translateX(-50%); /* Center the element horizontally */
+  text-align: left; /* Align the text in the center */
+  font-size: 16px; /* Adjust the font size as needed */
+  color: #666; /* Adjust the color of the text */
 }
 
 </style>
