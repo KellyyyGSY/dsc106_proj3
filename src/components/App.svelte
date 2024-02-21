@@ -575,6 +575,7 @@
     position: relative;
     display: flex;
     justify-content: left;
+    margin-bottom: -175px;
   }
 
 .ranking-container {
@@ -627,8 +628,8 @@
 }
 
 .graph-text {
-  position: absolute; /* Position the element absolutely */
-  bottom: -1400px; /* Adjust the distance from the bottom */
+  position: relative;
+  bottom: -250px; /* Adjust the distance from the bottom */
   width: 85%;
   left: 52%; /* Position it horizontally at the center */
   transform: translateX(-50%); /* Center the element horizontally */
