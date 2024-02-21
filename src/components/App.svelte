@@ -392,20 +392,26 @@
 }
 
   function drawLegend() {
+    // Update the colorScale to reflect current filteredData
     const colorScale = d3.scaleSequential(d3.interpolateYlGnBu)
                          .domain([0, d3.max(filteredData, d => d.Value)]);
     const legend = legendGroup;
 
-    const legendData = colorScale.ticks(5).map(d => ({
-      value: d,
-      color: colorScale(d)
-    }));
+    // Clear existing legend items to prevent duplication
+    legend.selectAll('.legend-item').remove();
+    legend.select('.legend-title').remove(); // Remove existing title to avoid duplicates
 
+    // Recreate the legend title and items based on the updated colorScale
     const legendTitle = legend.append('text')
       .attr('class', 'legend-title')
       .attr('x', -10)
       .attr('y', 505)
       .text('Percentage of individuals using the internet');
+
+    const legendData = colorScale.ticks(5).map(d => ({
+      value: d,
+      color: colorScale(d)
+    }));
 
     const legendX = -9;
     const legendY = 335;
@@ -425,7 +431,14 @@
     legendItem.append('text')
       .attr('x', 30)
       .attr('y', 15)
-      .text(d => d.value);
+      .text(d => d.value.toFixed(0)); 
+  }
+
+  // Existing reactive statement for updating the chart
+  $: if (data.length > 0 && selectedYear) {
+    filteredData = data.filter(d => d.Year === selectedYear);
+    drawChart();
+    drawLegend(); // Ensure legend is updated whenever the year or data changes
   }
 
 </script>
@@ -456,7 +469,7 @@
   {#if $searchError}<div style="color: red;">No such country.</div>{/if} 
   <div id="rankingList" class="ranking-container"></div>
   <div id="linePlotContainer" style="position: absolute; z-index: 1000;"></div>
-  <button on:click={toggleSortOrder}>Global Year Ranks</button> 
+  <button on:click={toggleSortOrder}>Global Year Ranks (%)</button> 
   <div class="graph-container">
     <svg class="container-svg" width="1090" height="600">
       <g transform="translate(150, 50)">
