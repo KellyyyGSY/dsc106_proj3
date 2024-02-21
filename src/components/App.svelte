@@ -592,15 +592,4 @@
   background-color: #f0f0f0;
 }
 
-.graph-text {
-  position: absolute; /* Position the element absolutely */
-  bottom: -1400px; /* Adjust the distance from the bottom */
-  width: 85%;
-  left: 52%; /* Position it horizontally at the center */
-  transform: translateX(-50%); /* Center the element horizontally */
-  text-align: left; /* Align the text in the center */
-  font-size: 16px; /* Adjust the font size as needed */
-  color: #666; /* Adjust the color of the text */
-}
-
 </style>
