@@ -394,12 +394,12 @@
 
     const legendTitle = legend.append('text')
       .attr('class', 'legend-title')
-      .attr('x', -100)
-      .attr('y', 475)
+      .attr('x', -10)
+      .attr('y', 515)
       .text('Percentage of individuals using the internet');
 
-    const legendX = -99;
-    const legendY = 305;
+    const legendX = -9;
+    const legendY = 345;
     const legendItem = legend.selectAll('.legend-item')
       .data(legendData)
       .enter()
@@ -448,7 +448,7 @@
   <div id="linePlotContainer" style="position: absolute; z-index: 1000;"></div>
   <button on:click={toggleSortOrder}>Global Year Ranks</button> 
   <div class="graph-container">
-    <svg class="container-svg" width="1290" height="600">
+    <svg class="container-svg" width="1090" height="600">
       <g transform="translate(150, 50)">
         <g class="chart-group"></g>
         <g class="legend-group"></g>
