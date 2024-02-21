@@ -468,6 +468,13 @@
     <svg id="linePlotSvg"></svg>
   </div>
   <div class="source-annotation">Source: UNdata</div>
+
+  <a href="https://github.com/KellyyyGSY/dsc106_proj3/blob/main/README.md"
+     target="_blank"
+     rel="noopener noreferrer"
+     class="center-link">
+    Here is a detailed write-up for the project.
+  </a>
 </main>
 
 
