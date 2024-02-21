@@ -151,79 +151,88 @@
   }
 
   function drawLinePlot(countryData, countryName, position) {
-    // Define dimensions and margins for the plot
-    const margin = { top: 10, right: 30, bottom: 30, left: 60 },
-          width = 400 - margin.left - margin.right,
-          height = 300 - margin.top - margin.bottom;
+      // Define dimensions and margins for the plot
+      const margin = { top: 10, right: 30, bottom: 30, left: 60 },
+            width = 400 - margin.left - margin.right,
+            height = 300 - margin.top - margin.bottom;
 
-    // Select the container and position it
-    const container = d3.select("#linePlotContainer")
-                        .style("right", `${position.x}px`)
-                        .style("top", `${position.y + 150}px`);
+      // Select the container and position it
+      const container = d3.select("#linePlotContainer")
+                          .style("right", `${position.x}px`)
+                          .style("top", `${position.y + 150}px`);
 
-    // Clear previous SVG to ensure only one plot is visible at a time
-    container.select("svg").remove();
+      // Clear previous SVG to ensure only one plot is visible at a time
+      container.select("svg").remove();
 
-    // Append a new SVG to the container for the line plot
-    const svg = container.append("svg")
-                  .attr("width", width + margin.left + margin.right)
-                  .attr("height", height + margin.top + margin.bottom)
-                  .append("g")
-                  .attr("transform", `translate(${margin.left},${margin.top})`);
+      // Append a new SVG to the container for the line plot
+      const svg = container.append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom);
 
-    // Add X axis
-    const x = d3.scaleLinear()
-                .domain(d3.extent(countryData, d => d.Year))
-                .range([0, width]);
-    svg.append("g")
-       .attr("transform", `translate(0, ${height})`)
-       .call(d3.axisBottom(x).tickFormat(d3.format("d")))
-       .selectAll("text") // Select the text elements for the tick labels
-       .style("font-weight", "bold"); // Make the text bolder
+      // Append a white background rect with a stroke and set opacity to 50%
+      svg.append("rect")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("fill", "white")
+        .attr("opacity", 0.7); // Set the opacity to 50%
 
-    // Add Y axis
-    const y = d3.scaleLinear()
-                .domain([0, d3.max(countryData, d => d.Value)])
-                .range([height, 0]);
-    svg.append("g")
-       .call(d3.axisLeft(y))
-       .selectAll("text")
-       .style("font-weight", "bold");
+      // Append group for the plot (this must come after the background rect)
+      const plotGroup = svg.append("g")
+                          .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Add the line
-    svg.append("path")
-       .datum(countryData)
-       .attr("fill", "none")
-       .attr("stroke", "steelblue")
-       .attr("stroke-width", 1.5)
-       .attr("d", d3.line()
-                    .x(d => x(d.Year))
-                    .y(d => y(d.Value)));
+      // Add X axis
+      const x = d3.scaleLinear()
+                  .domain(d3.extent(countryData, d => d.Year))
+                  .range([0, width]);
+      plotGroup.append("g")
+              .attr("transform", `translate(0, ${height})`)
+              .call(d3.axisBottom(x).tickFormat(d3.format("d")))
+              .selectAll("text") // Select the text elements for the tick labels
+              .style("font-weight", "bold"); // Make the text bolder
 
-    // Add title
-    svg.append("text")
-       .attr("x", (width / 2))             
-       .attr("y", 8 - (margin.top / 2))
-       .attr("text-anchor", "middle")  
-       .style("font-size", "16px") 
-       .style("text-decoration", "underline")  
-       .text(`${countryName}`);
+      // Add Y axis
+      const y = d3.scaleLinear()
+                  .domain([0, d3.max(countryData, d => d.Value)])
+                  .range([height, 0]);
+      plotGroup.append("g")
+              .call(d3.axisLeft(y))
+              .selectAll("text")
+              .style("font-weight", "bold");
 
-    // Highlight the current year and value
-    const currentYearData = countryData.find(d => d.Year === selectedYear);
-    if (currentYearData) {
-        svg.append("circle")
-           .attr("cx", x(currentYearData.Year))
-           .attr("cy", y(currentYearData.Value))
-           .attr("r", 5)
-           .attr("fill", "red");
+      // Add the line
+      plotGroup.append("path")
+              .datum(countryData)
+              .attr("fill", "none")
+              .attr("stroke", "steelblue")
+              .attr("stroke-width", 1.5)
+              .attr("d", d3.line()
+                            .x(d => x(d.Year))
+                            .y(d => y(d.Value)));
 
-        svg.append("text")
-           .attr("x", x(currentYearData.Year) + 5)
-           .attr("y", y(currentYearData.Value) - 5)
-           .text(`${currentYearData.Value}`);
-    }
-}
+      // Add title
+      plotGroup.append("text")
+              .attr("x", (width / 2))             
+              .attr("y", 8 - (margin.top / 2))
+              .attr("text-anchor", "middle")  
+              .style("font-size", "16px") 
+              .style("text-decoration", "underline")  
+              .text(`${countryName}`);
+
+      // Highlight the current year and value
+      const currentYearData = countryData.find(d => d.Year === selectedYear);
+      if (currentYearData) {
+          plotGroup.append("circle")
+                  .attr("cx", x(currentYearData.Year))
+                  .attr("cy", y(currentYearData.Value))
+                  .attr("r", 5)
+                  .attr("fill", "red");
+
+          plotGroup.append("text")
+                  .attr("x", x(currentYearData.Year) + 5)
+                  .attr("y", y(currentYearData.Value) - 5)
+                  .text(`${currentYearData.Value}`);
+      }
+  }
 
   function clicked(event = null, d) {
         // Stop the event from bubbling up
@@ -432,7 +441,8 @@
       bind:value="{yearIndex}"
       on:input="{updateYear}"
     />
-    <span class="year-label">{selectedYear}</span>
+    <!-- Add 'Year' prefix before displaying selectedYear -->
+    <span class="year-label">Year {selectedYear}</span>
   </div>
   <input type="text" bind:value={countryInput} placeholder="Enter country name">
   {#if $suggestions.length}
@@ -457,58 +467,7 @@
     <div class="tooltip" style="{tooltipStyle}">{tooltipContent}</div>
     <svg id="linePlotSvg"></svg>
   </div>
-  <div class="graph-text">
-    <p> <b>Map Visualization</b><br>We use the <b>Internet Usage Data</b> as our dataset to achieve our visualization. 
-    Given the nature of the data (internet usage across countries/regions over time), 
-    a <b>choropleth map</b> was chosen as the primary visualization technique. 
-    Choropleth maps are effective for displaying variations in data across geographical regions. 
-    A <b>sequential color scale</b> from yellow, green to blue was selected to better emphasize the degree of internet usage, 
-    with lighter shades indicating lower internet usage and darker shades indicating higher usage. 
-    This choice ensures clear differentiation between countries with varying levels of internet penetration. 
-    The legend accompanying the map provides a visual reference for interpreting the colors, 
-    enhancing the user's understanding of the data. Upon clicking a country on the map, a line plot appears, 
-    showing the internet usage trend over the years for the selected country. 
-    Line plots are suitable for displaying time-series data, making it easy to observe trends and fluctuations over time. 
-    By showing the trend for a specific country upon user interaction, 
-    it provides detailed insights into individual country-level data. <br><br>
-    
-    <b>Interactive Elements</b><br>Regarding the interactive features of our visualization, we've integrated a slider right beneath the title, 
-    providing users with the flexibility to select the year they want to explore. 
-    This interactive tool empowers users to track the progression of internet usage over time, 
-    thereby facilitating temporal analysis. When users hover over different regions on the map, tooltips pop up, 
-    furnishing detailed insights into each country's internet usage for the chosen year. Moreover, 
-    we've implemented click event functionality and blur effects, accompanied by line plots for specific regions, 
-    to effectively illustrate data trends. Additionally, clicking on the blank area resets the map. Furthermore, 
-    the inclusion of a search bar allows users to effortlessly locate countries by name, 
-    streamlining access to specific countries of interest. The ranking list situated on the website's side 
-    permits users to switch between ascending and descending orders for global year ranks. 
-    This interactive feature furnishes additional perspectives on the distribution of internet usage across countries.<br><br>
-
-    <b>Changes and Issues</b><br>Throughout the development process, the choice of geographic projections underwent some changes. 
-    Initially, we favored the geoMercator projection but ultimately transitioned to geoNaturalEarth1 
-    due to its reduction in area distortion. The current version of the website isn't flawless, though. 
-    It's important to note that in the original dataset, there's data for both countries and regions, 
-    which is reflected in the ranking list. Clicking on a country's name in the ranking list directs us to its location on the map. 
-    However, for regions like North America, this functionality doesn't work. Additionally, 
-    when we click on a country's name in the ranking list, only the zoom effect happens, 
-    and we have to click on the region again to trigger the plot and blur effect. Lastly, 
-    after selecting a specific country, the blur effect doesn't persist when we slide the slider.<br><br>
-
-    <b>Team roles</b><br>Team responsibilities were not explicitly divided. We selected the dataset that Andrew preprocessed in his project 2 to save some time. 
-    Yishan and Kelly took charge of importing datasets and establishing the foundational map and projection, 
-    along with their respective attributes. Kelly incorporated interactive elements like sliders and hover effects, 
-    while Yishan created a color legend for reference and contributed to most of the write-up content. 
-    Andrew played a crucial role in enhancing interactivity by focusing on details such as click event functionality and blur effects, 
-    incorporating specific line plots for each region. Additionally, he introduced a search bar to streamline access to countries of interest. <br><br>
-
-    <b>Challenges</b><br>Each team member dedicated around <b>20 hours</b> to this project. 
-    At the start, we didn't realize there was a template available, so we had to spend a significant amount 
-    of time setting up the entire environment from scratch. This oversight also led to some unnecessary 
-    delays in deploying the website. Additionally, to prevent conflicts, we took turns working on the project. 
-    However, we encountered issues with setting too many variables as local within each function instead of 
-    making them global, which caused errors and required additional time for debugging. <br><br>
-    </p>
-  </div>
+  <div class="source-annotation">Source: UNdata</div>
 </main>
 
 
@@ -575,7 +534,6 @@
     position: relative;
     display: flex;
     justify-content: left;
-    margin-bottom: -175px;
   }
 
 .ranking-container {
@@ -628,8 +586,8 @@
 }
 
 .graph-text {
-  position: relative;
-  bottom: -250px; /* Adjust the distance from the bottom */
+  position: absolute; /* Position the element absolutely */
+  bottom: -1400px; /* Adjust the distance from the bottom */
   width: 85%;
   left: 52%; /* Position it horizontally at the center */
   transform: translateX(-50%); /* Center the element horizontally */
